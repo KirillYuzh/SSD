@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: animal-shelter-api
+  datasource:
+    url: jdbc:sqlite:shelter.db
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      connection-init-sql: "PRAGMA foreign_keys = ON"
+  sql:
+    init:
+      # SQLite не распознаётся Spring Boot как встроенная база данных,
+      # поэтому выполнение schema.sql задаётся явно.
+      mode: always
+      schema-locations: classpath:schema.sql
+  jpa:
+    # Схема создаётся из schema.sql, Hibernate не управляет структурой таблиц.
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha

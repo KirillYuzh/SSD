@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: 1БАС24009
+
+greeting:
+  text: "Hello, world!"

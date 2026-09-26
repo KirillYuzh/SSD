@@ -1,0 +1,1347 @@
+openapi: 3.1.0
+info:
+  title: Приют и передача животных в семью
+  description: "REST API приюта: животные, вольеры, заявки на усыновление, акты пе\
+    редачи, пользователи. Даты и время проставляет сервер, в запросах не передаютс\
+    я."
+  version: 1.0.0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+tags:
+- name: Животные
+  description: "Животные приюта: кличка, вид, возраст, статус размещения"
+- name: Акты передачи
+  description: "Акты передачи животного семье: даты подготовки и подтверждения, ст\
+    атус"
+- name: Вольеры
+  description: "Вольеры приюта: допустимые виды животных и вместимость"
+- name: Пользователи
+  description: "Пользователи системы, выступающие заявителями усыновления"
+- name: Заявки на усыновление
+  description: "Заявки: животное, заявитель и статус"
+paths:
+  /api/users:
+    get:
+      tags:
+      - Пользователи
+      summary: Список пользователей
+      operationId: listUsers
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserResponse"
+    post:
+      tags:
+      - Пользователи
+      summary: Зарегистрировать пользователя
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRequest"
+        required: true
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "201":
+          description: Ресурс создан
+          headers:
+            Location:
+              description: Адрес созданного ресурса
+              style: simple
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+  /api/enclosures:
+    get:
+      tags:
+      - Вольеры
+      summary: Список вольеров
+      operationId: listEnclosures
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EnclosureResponse"
+    post:
+      tags:
+      - Вольеры
+      summary: Добавить вольер
+      operationId: createEnclosure
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnclosureRequest"
+        required: true
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "201":
+          description: Ресурс создан
+          headers:
+            Location:
+              description: Адрес созданного ресурса
+              style: simple
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EnclosureResponse"
+  /api/animals:
+    get:
+      tags:
+      - Животные
+      summary: Список животных
+      operationId: listAnimals
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AnimalResponse"
+    post:
+      tags:
+      - Животные
+      summary: Добавить животное
+      operationId: createAnimal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnimalRequest"
+        required: true
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "201":
+          description: Ресурс создан
+          headers:
+            Location:
+              description: Адрес созданного ресурса
+              style: simple
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AnimalResponse"
+  /api/animal-handover-records:
+    get:
+      tags:
+      - Акты передачи
+      summary: Список актов передачи
+      operationId: listHandoverRecords
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AnimalHandoverRecordResponse"
+    post:
+      tags:
+      - Акты передачи
+      summary: Подготовить акт передачи
+      operationId: createHandoverRecord
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnimalHandoverRecordRequest"
+        required: true
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "201":
+          description: Ресурс создан
+          headers:
+            Location:
+              description: Адрес созданного ресурса
+              style: simple
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AnimalHandoverRecordResponse"
+  /api/adoption-applications:
+    get:
+      tags:
+      - Заявки на усыновление
+      summary: Список заявок
+      operationId: listAdoptionApplications
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AdoptionApplicationResponse"
+    post:
+      tags:
+      - Заявки на усыновление
+      summary: Подать заявку на усыновление
+      operationId: createAdoptionApplication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdoptionApplicationRequest"
+        required: true
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "201":
+          description: Ресурс создан
+          headers:
+            Location:
+              description: Адрес созданного ресурса
+              style: simple
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AdoptionApplicationResponse"
+  /api/users/{id}:
+    get:
+      tags:
+      - Пользователи
+      summary: Пользователь по идентификатору
+      operationId: getUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+    delete:
+      tags:
+      - Пользователи
+      summary: Удалить пользователя
+      operationId: deleteUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "204":
+          description: No Content
+    patch:
+      tags:
+      - Пользователи
+      summary: Частично обновить пользователя
+      operationId: updateUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserPatch"
+        required: true
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+  /api/enclosures/{id}:
+    get:
+      tags:
+      - Вольеры
+      summary: Вольер по идентификатору
+      operationId: getEnclosure
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EnclosureResponse"
+    delete:
+      tags:
+      - Вольеры
+      summary: Удалить вольер
+      operationId: deleteEnclosure
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "204":
+          description: No Content
+    patch:
+      tags:
+      - Вольеры
+      summary: Частично обновить вольер
+      operationId: updateEnclosure
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnclosurePatch"
+        required: true
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/EnclosureResponse"
+  /api/animals/{id}:
+    get:
+      tags:
+      - Животные
+      summary: Животное по идентификатору
+      operationId: getAnimal
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AnimalResponse"
+    delete:
+      tags:
+      - Животные
+      summary: Удалить животное
+      operationId: deleteAnimal
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "204":
+          description: No Content
+    patch:
+      tags:
+      - Животные
+      summary: Частично обновить животное
+      operationId: updateAnimal
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnimalPatch"
+        required: true
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AnimalResponse"
+  /api/animal-handover-records/{id}:
+    get:
+      tags:
+      - Акты передачи
+      summary: Акт передачи по идентификатору
+      operationId: getHandoverRecord
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AnimalHandoverRecordResponse"
+    delete:
+      tags:
+      - Акты передачи
+      summary: Удалить акт передачи
+      operationId: deleteHandoverRecord
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "204":
+          description: No Content
+    patch:
+      tags:
+      - Акты передачи
+      summary: Изменить статус акта передачи
+      operationId: updateHandoverRecord
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnimalHandoverRecordPatch"
+        required: true
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AnimalHandoverRecordResponse"
+  /api/adoption-applications/{id}:
+    get:
+      tags:
+      - Заявки на усыновление
+      summary: Заявка по идентификатору
+      operationId: getAdoptionApplication
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AdoptionApplicationResponse"
+    delete:
+      tags:
+      - Заявки на усыновление
+      summary: Удалить заявку
+      operationId: deleteAdoptionApplication
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "204":
+          description: No Content
+    patch:
+      tags:
+      - Заявки на усыновление
+      summary: Изменить статус заявки
+      operationId: updateAdoptionApplication
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdoptionApplicationPatch"
+        required: true
+      responses:
+        "400":
+          description: Тело запроса не соответствует формату ресурса
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Ресурс не найден
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Операция нарушает состояние данных
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AdoptionApplicationResponse"
+components:
+  schemas:
+    ApiError:
+      type: object
+      description: Тело ответа с ошибкой
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Момент формирования ответа
+          example: 2026-09-26T07:07:27.667885Z
+        status:
+          type: integer
+          format: int32
+          description: Код ответа
+          example: 409
+        error:
+          type: string
+          description: "Причина, соответствующая коду"
+          example: Conflict
+        message:
+          type: string
+          description: Описание причины ошибки
+        path:
+          type: string
+          description: Путь запроса
+          example: /api/animals/1
+    UserRequest:
+      type: object
+      description: Новый пользователь системы
+      properties:
+        username:
+          type: string
+          description: Логин
+          example: ivan
+          minLength: 1
+          pattern: "^[a-zA-Z0-9_.-]{3,32}$"
+        fullName:
+          type: string
+          description: Имя и фамилия
+          example: Иван Петров
+          minLength: 1
+        email:
+          type: string
+          format: email
+          description: Адрес электронной почты
+          example: ivan@example.com
+          minLength: 1
+      required:
+      - email
+      - fullName
+      - username
+    UserResponse:
+      type: object
+      description: Пользователь системы
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Идентификатор
+          example: 1
+        username:
+          type: string
+          description: Логин
+          example: ivan
+        fullName:
+          type: string
+          description: Имя и фамилия
+          example: Иван Петров
+        email:
+          type: string
+          description: Адрес электронной почты
+          example: ivan@example.com
+    EnclosureRequest:
+      type: object
+      description: Новый вольер
+      properties:
+        name:
+          type: string
+          description: Название вольера
+          example: Вольер для собак
+          minLength: 1
+        allowedSpecies:
+          type: array
+          description: "Виды животных, которых допустимо размещать"
+          example:
+          - Собака
+          items:
+            type: string
+            minLength: 1
+          minItems: 1
+          uniqueItems: true
+        capacity:
+          type: integer
+          format: int32
+          description: Вместимость вольера
+          example: 4
+      required:
+      - allowedSpecies
+      - capacity
+      - name
+    EnclosureResponse:
+      type: object
+      description: Вольер приюта
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Идентификатор
+          example: 1
+        name:
+          type: string
+          description: Название вольера
+          example: Вольер для собак
+        allowedSpecies:
+          type: array
+          description: "Виды животных, которых допустимо размещать"
+          example:
+          - Собака
+          items:
+            type: string
+          uniqueItems: true
+        capacity:
+          type: integer
+          format: int32
+          description: Вместимость вольера
+          example: 4
+    AnimalRequest:
+      type: object
+      description: Новое животное приюта
+      properties:
+        name:
+          type: string
+          description: Кличка
+          example: Бобик
+          minLength: 1
+        species:
+          type: string
+          description: Вид животного
+          example: Собака
+          minLength: 1
+        age:
+          type: integer
+          format: int32
+          description: Возраст в полных годах
+          example: 3
+        status:
+          type: string
+          description: "Статус размещения, по умолчанию AVAILABLE"
+          enum:
+          - AVAILABLE
+          - RESERVED
+          - HANDED_OVER
+          example: AVAILABLE
+      required:
+      - age
+      - name
+      - species
+    AnimalResponse:
+      type: object
+      description: Животное приюта
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Идентификатор
+          example: 1
+        name:
+          type: string
+          description: Кличка
+          example: Бобик
+        species:
+          type: string
+          description: Вид животного
+          example: Собака
+        age:
+          type: integer
+          format: int32
+          description: Возраст в полных годах
+          example: 3
+        status:
+          type: string
+          description: Статус размещения
+          enum:
+          - AVAILABLE
+          - RESERVED
+          - HANDED_OVER
+          example: AVAILABLE
+    AnimalHandoverRecordRequest:
+      type: object
+      description: "Заявка, по которой готовится акт передачи"
+      properties:
+        applicationId:
+          type: integer
+          format: int64
+          description: Идентификатор одобренной заявки
+          example: 1
+      required:
+      - applicationId
+    AnimalHandoverRecordResponse:
+      type: object
+      description: Акт передачи животного семье
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Идентификатор
+          example: 1
+        applicationId:
+          type: integer
+          format: int64
+          description: "Заявка, по которой оформлена передача"
+          example: 1
+        preparationDate:
+          type: string
+          format: date
+          description: "Дата подготовки акта, проставляется сервером"
+          example: 2026-09-26
+        confirmationDate:
+          type:
+          - string
+          - "null"
+          format: date
+          description: "Дата подтверждения акта, проставляется сервером при подтве\
+            рждении"
+          example: 2026-09-26
+        status:
+          type: string
+          description: Статус акта передачи
+          enum:
+          - PREPARED
+          - CONFIRMED
+          - CANCELLED
+          example: PREPARED
+    AdoptionApplicationRequest:
+      type: object
+      description: Новая заявка на усыновление
+      properties:
+        animalId:
+          type: integer
+          format: int64
+          description: "Животное, на которое подана заявка"
+          example: 1
+        applicantId:
+          type: integer
+          format: int64
+          description: Заявитель
+          example: 1
+        status:
+          type: string
+          description: "Статус заявки, по умолчанию PENDING"
+          enum:
+          - PENDING
+          - APPROVED
+          - REJECTED
+          - CANCELLED
+          example: PENDING
+      required:
+      - animalId
+      - applicantId
+    AdoptionApplicationResponse:
+      type: object
+      description: Заявка на усыновление
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Идентификатор
+          example: 1
+        animalId:
+          type: integer
+          format: int64
+          description: "Животное, на которое подана заявка"
+          example: 1
+        applicantId:
+          type: integer
+          format: int64
+          description: Заявитель
+          example: 1
+        status:
+          type: string
+          description: Статус заявки
+          enum:
+          - PENDING
+          - APPROVED
+          - REJECTED
+          - CANCELLED
+          example: PENDING
+        submittedAt:
+          type: string
+          format: date-time
+          description: "Дата и время подачи заявки, проставляются сервером"
+          example: 2026-09-26T07:07:27.613832Z
+    UserPatch:
+      type: object
+      description: "Поля пользователя для изменения, отсутствующие поля не меняютс\
+        я"
+      properties:
+        username:
+          type: string
+          description: Логин
+          example: ivan
+          pattern: "^[a-zA-Z0-9_.-]{3,32}$"
+        fullName:
+          type: string
+          description: Имя и фамилия
+          example: Иван Петров
+          pattern: \S+
+        email:
+          type: string
+          format: email
+          description: Адрес электронной почты
+          example: ivan.petrov@example.com
+    EnclosurePatch:
+      type: object
+      description: "Поля вольера для изменения, отсутствующие поля не меняются"
+      properties:
+        name:
+          type: string
+          description: Название вольера
+          example: Вольер для собак
+          pattern: \S+
+        allowedSpecies:
+          type: array
+          description: "Виды животных, которых допустимо размещать"
+          example:
+          - Собака
+          - Кошка
+          items:
+            type: string
+            pattern: \S+
+          uniqueItems: true
+        capacity:
+          type: integer
+          format: int32
+          description: Вместимость вольера
+          example: 6
+    AnimalPatch:
+      type: object
+      description: "Поля животного для изменения, отсутствующие поля не меняются"
+      properties:
+        name:
+          type: string
+          description: Кличка
+          example: Бобик
+          pattern: \S+
+        species:
+          type: string
+          description: Вид животного
+          example: Собака
+          pattern: \S+
+        age:
+          type: integer
+          format: int32
+          description: Возраст в полных годах
+          example: 4
+        status:
+          type: string
+          description: Статус размещения
+          enum:
+          - AVAILABLE
+          - RESERVED
+          - HANDED_OVER
+          example: AVAILABLE
+    AnimalHandoverRecordPatch:
+      type: object
+      description: Новый статус акта передачи
+      properties:
+        status:
+          type: string
+          description: Статус акта передачи
+          enum:
+          - PREPARED
+          - CONFIRMED
+          - CANCELLED
+          example: CONFIRMED
+    AdoptionApplicationPatch:
+      type: object
+      description: Новый статус заявки
+      properties:
+        status:
+          type: string
+          description: Статус заявки
+          enum:
+          - PENDING
+          - APPROVED
+          - REJECTED
+          - CANCELLED
+          example: APPROVED
