@@ -1,11 +1,3 @@
--- Схема базы данных SQLite.
---
--- Типы столбцов в SQLite задают аффинность, а не строгий тип: аффинность NUMERIC
--- сохраняет целые числа как числа, поэтому значения дат, которые JDBC-драйвер
--- пишет числами, читаются без потери. Схема создаётся при каждом запуске,
--- поэтому используется CREATE TABLE IF NOT EXISTS: данные сохраняются между
--- перезапусками приложения.
-
 CREATE TABLE IF NOT EXISTS users
 (
     id        INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,7 +22,6 @@ CREATE TABLE IF NOT EXISTS enclosures
     capacity INTEGER     NOT NULL CHECK (capacity > 0)
 );
 
--- Допустимые виды животных хранятся в отдельной таблице, одна строка на вид.
 CREATE TABLE IF NOT EXISTS enclosure_species
 (
     enclosure_id INTEGER    NOT NULL REFERENCES enclosures (id) ON DELETE CASCADE,
@@ -56,8 +47,6 @@ CREATE TABLE IF NOT EXISTS animal_handover_records
     status            VARCHAR(32) NOT NULL
 );
 
--- Ссылки на животных, заявителей и заявки защищены внешними ключами: удаление
--- строки, на которую кто-то ссылается, невозможно на уровне базы данных.
 CREATE INDEX IF NOT EXISTS idx_adoption_applications_animal ON adoption_applications (animal_id);
 CREATE INDEX IF NOT EXISTS idx_adoption_applications_applicant ON adoption_applications (applicant_id);
 CREATE INDEX IF NOT EXISTS idx_handover_records_application ON animal_handover_records (application_id);
