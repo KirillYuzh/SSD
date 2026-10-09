@@ -9,8 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition(info = @Info(
         title = "Приют и передача животных в семью",
         version = "1.0.0",
-        description = "REST API приюта: животные, вольеры, заявки на усыновление, акты передачи, пользователи. "
-                + "Даты и время проставляет сервер, в запросах не передаются."))
+        description = "REST API приюта"
+))
 public class AnimalShelterApplication {
 
     public static void main(String[] args) {
