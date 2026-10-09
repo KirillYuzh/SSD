@@ -8,11 +8,13 @@
 mvn clean package
 ```
 
+Запуск из .jar:
+
 ```bash
 java -jar target/lab1-0.0.1-SNAPSHOT.jar
 ```
 
-Запуск во время разработки без предварительной упаковки:
+Или запуск без предварительной упаковки:
 
 ```bash
 mvn spring-boot:run
@@ -29,7 +31,7 @@ curl -i http://localhost:8080/api/text
 Hello, world!
 ```
 
-#### Сумма
+#### Сумма от 1 до N
 
 ```bash
 curl -i http://localhost:8080/api/sum/9
