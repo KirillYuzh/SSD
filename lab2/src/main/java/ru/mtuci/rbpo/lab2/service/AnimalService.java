@@ -49,7 +49,7 @@ public class AnimalService {
         if (patch.status() != null && patch.status() != animal.getStatus()
                 && !adoptionApplicationRepository.findByAnimalIdOrderById(id).isEmpty()) {
             throw new ConflictException("Статус размещения животного с id " + id
-                    + " меняется автоматически по заявкам, измените статус заявки или акт передачи");
+                    + " меняется автоматически, измените статус заявки или акт передачи");
         }
         if (patch.name() != null) {
             animal.setName(patch.name().trim());
@@ -65,10 +65,7 @@ public class AnimalService {
         }
         return animal;
     }
-
-    /**
-     * Меняет статус размещения по решению сервисного слоя — при обработке заявок и актов передачи.
-     */
+    
     @Transactional
     public Animal changeStatus(long id, AnimalStatus status) {
         Animal animal = findById(id);
@@ -82,8 +79,7 @@ public class AnimalService {
         List<AdoptionApplication> applications = adoptionApplicationRepository.findByAnimalIdOrderById(id);
         if (!applications.isEmpty()) {
             throw new ConflictException("Животное с id " + id + " используется в заявках "
-                    + applications.stream().map(application -> String.valueOf(application.getId())).toList()
-                    + ", удаление оставило бы недействительные ссылки");
+                    + applications.stream().map(application -> String.valueOf(application.getId())).toList());
         }
         animalRepository.deleteById(id);
     }
