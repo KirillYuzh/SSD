@@ -90,9 +90,6 @@ public class AdoptionApplicationService {
         applyAnimalStatus(animalService.findById(application.getAnimalId()), AdoptionStatus.CANCELLED);
     }
 
-    /**
-     * Активная заявка закрепляет животное за семьёй, закрытая освобождает его.
-     */
     private void applyAnimalStatus(Animal animal, AdoptionStatus applicationStatus) {
         AnimalStatus target = switch (applicationStatus) {
             case PENDING, APPROVED -> AnimalStatus.RESERVED;
