@@ -4,8 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import ru.mtuci.rbpo.lab2.domain.HandoverStatus;
 
 /**
- * Частичное обновление акта передачи. Меняется только статус: даты подготовки
- * и подтверждения проставляются сервером и в запросе не передаются.
+ * Частичное обновление акта передачи
  */
 @Schema(description = "Новый статус акта передачи")
 public record AnimalHandoverRecordPatch(
