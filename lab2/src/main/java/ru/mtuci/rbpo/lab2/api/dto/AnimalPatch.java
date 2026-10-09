@@ -6,9 +6,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import ru.mtuci.rbpo.lab2.domain.AnimalStatus;
 
 /**
- * Частичное обновление животного: переданные поля заменяют значения ресурса,
- * отсутствующие (null) оставляют их без изменений. Поэтому ограничения проверяют
- * только формат переданного значения и допускают null.
+ * Частичное обновление животного
  */
 @Schema(description = "Поля животного для изменения, отсутствующие поля не меняются")
 public record AnimalPatch(
