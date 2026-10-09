@@ -41,11 +41,6 @@ public class AnimalHandoverRecordService {
                 .orElseThrow(() -> new NotFoundException("Акт передачи с id " + id + " не найден"));
     }
 
-    /**
-     * Акт создаётся в статусе PREPARED с датой подготовки, которую проставляет сервер.
-     * Подтверждение оформляется отдельным обновлением, поэтому дата подтверждения
-     * совпадает с датой подтверждения, а не с датой подготовки.
-     */
     @Transactional
     public AnimalHandoverRecord create(AnimalHandoverRecordRequest request) {
         AdoptionApplication application = adoptionApplicationService.findById(request.applicationId());
