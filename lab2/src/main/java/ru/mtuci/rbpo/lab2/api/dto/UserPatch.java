@@ -4,11 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 
-/**
- * Частичное обновление пользователя: переданные поля заменяют значения ресурса,
- * отсутствующие (null) оставляют их без изменений. Ограничения проверяют формат
- * переданного значения и допускают null.
- */
+
 @Schema(description = "Поля пользователя для изменения, отсутствующие поля не меняются")
 public record UserPatch(
 
