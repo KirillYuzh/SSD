@@ -69,8 +69,7 @@ public class UserService {
         List<AdoptionApplication> applications = adoptionApplicationRepository.findByApplicantIdOrderById(id);
         if (!applications.isEmpty()) {
             throw new ConflictException("Пользователь с id " + id + " является заявителем в заявках "
-                    + applications.stream().map(application -> String.valueOf(application.getId())).toList()
-                    + ", удаление оставило бы недействительные ссылки");
+                    + applications.stream().map(application -> String.valueOf(application.getId())).toList());
         }
         userRepository.deleteById(id);
     }
