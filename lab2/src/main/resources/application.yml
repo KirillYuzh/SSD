@@ -8,12 +8,9 @@ spring:
       connection-init-sql: "PRAGMA foreign_keys = ON"
   sql:
     init:
-      # SQLite не распознаётся Spring Boot как встроенная база данных,
-      # поэтому выполнение schema.sql задаётся явно.
       mode: always
       schema-locations: classpath:schema.sql
   jpa:
-    # Схема создаётся из schema.sql, Hibernate не управляет структурой таблиц.
     hibernate:
       ddl-auto: none
     open-in-view: false
