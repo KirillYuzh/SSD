@@ -1,0 +1,405 @@
+{
+  "info": {
+    "name": "Приют: задание 3",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "userId", "value": "" },
+    { "key": "enclosureId", "value": "" },
+    { "key": "animalId", "value": "" },
+    { "key": "applicationId", "value": "" },
+    { "key": "recordId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. Исходные данные",
+      "item": [
+        {
+          "name": "Животные",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/animals" }
+        },
+        {
+          "name": "Вольеры",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/enclosures" }
+        },
+        {
+          "name": "Пользователи",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/users" }
+        },
+        {
+          "name": "Заявки",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/adoption-applications" }
+        },
+        {
+          "name": "Акты передачи",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/animal-handover-records" }
+        }
+      ]
+    },
+    {
+      "name": "2. Пользователи",
+      "item": [
+        {
+          "name": "Создать пользователя",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"orlov\", \"fullName\": \"Павел Орлов\", \"email\": \"orlov@example.com\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/users"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.collectionVariables.set(\"userId\", pm.response.json().id);"]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Получить пользователя",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/users/{{userId}}" }
+        },
+        {
+          "name": "Изменить пользователя",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"pavel.orlov@example.com\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/users/{{userId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Вольеры",
+      "item": [
+        {
+          "name": "Создать вольер",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Карантинный вольер\", \"allowedSpecies\": [\"Собака\", \"Кошка\"], \"capacity\": 2}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/enclosures"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.collectionVariables.set(\"enclosureId\", pm.response.json().id);"]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Получить вольер",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/enclosures/{{enclosureId}}" }
+        },
+        {
+          "name": "Изменить вольер",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"capacity\": 3}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/enclosures/{{enclosureId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Животные",
+      "item": [
+        {
+          "name": "Создать животное",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Рыжик\", \"species\": \"Кошка\", \"age\": 2}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animals"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.collectionVariables.set(\"animalId\", pm.response.json().id);"]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Получить животное",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/animals/{{animalId}}" }
+        },
+        {
+          "name": "Изменить животное",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"age\": 3}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animals/{{animalId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Заявки",
+      "item": [
+        {
+          "name": "Подать заявку",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"animalId\": {{animalId}}, \"applicantId\": {{userId}}, \"motivation\": \"Готов забрать кошку домой\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/adoption-applications"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.collectionVariables.set(\"applicationId\", pm.response.json().id);"]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Получить заявку",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/adoption-applications/{{applicationId}}" }
+        },
+        {
+          "name": "Изменить мотивацию",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"motivation\": \"Готов забрать кошку домой, есть переноска\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/adoption-applications/{{applicationId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Бизнес-операции",
+      "item": [
+        {
+          "name": "Разместить животное в вольере",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"enclosureId\": {{enclosureId}}}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animals/{{animalId}}/placement"
+          }
+        },
+        {
+          "name": "Размещение: вид не подходит вольеру",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"enclosureId\": 2}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animals/3/placement"
+          }
+        },
+        {
+          "name": "Одобрить заявку",
+          "request": { "method": "POST", "url": "{{baseUrl}}/api/adoption-applications/1/approval" }
+        },
+        {
+          "name": "Отклонение: заявка уже отклонена",
+          "request": { "method": "POST", "url": "{{baseUrl}}/api/adoption-applications/2/rejection" }
+        },
+        {
+          "name": "Отклонить заявку",
+          "request": { "method": "POST", "url": "{{baseUrl}}/api/adoption-applications/3/rejection" }
+        },
+        {
+          "name": "Отзыв: заявка подана другим пользователем",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"applicantId\": 3}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/adoption-applications/1/withdrawal"
+          }
+        },
+        {
+          "name": "Отозвать заявку",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"applicantId\": {{userId}}}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/adoption-applications/{{applicationId}}/withdrawal"
+          }
+        },
+        {
+          "name": "Подготовить акт передачи",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"applicationId\": 1}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animal-handover-records"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.collectionVariables.set(\"recordId\", pm.response.json().id);"]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Получить акт передачи",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/animal-handover-records/{{recordId}}" }
+        },
+        {
+          "name": "Подтвердить передачу",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"CONFIRMED\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animal-handover-records/1"
+          }
+        },
+        {
+          "name": "Вернуть животное в приют",
+          "request": { "method": "POST", "url": "{{baseUrl}}/api/animal-handover-records/1/return" }
+        },
+        {
+          "name": "Возврат: акт уже возвращён",
+          "request": { "method": "POST", "url": "{{baseUrl}}/api/animal-handover-records/1/return" }
+        },
+        {
+          "name": "Разместить созданное животное в общий вольер",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"enclosureId\": 3}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animals/{{animalId}}/placement"
+          }
+        },
+        {
+          "name": "Разместить Рекса в общий вольер",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"enclosureId\": 3}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animals/3/placement"
+          }
+        },
+        {
+          "name": "Размещение: в вольере нет мест",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"enclosureId\": 3}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animals/4/placement"
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Удаление созданных данных",
+      "item": [
+        {
+          "name": "Удалить заявку",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/adoption-applications/{{applicationId}}" }
+        },
+        {
+          "name": "Удалить акт передачи",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/animal-handover-records/{{recordId}}" }
+        },
+        {
+          "name": "Удалить животное",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/animals/{{animalId}}" }
+        },
+        {
+          "name": "Удалить вольер",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/enclosures/{{enclosureId}}" }
+        },
+        {
+          "name": "Удалить пользователя",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/users/{{userId}}" }
+        },
+        {
+          "name": "Удаление: у животного есть заявки",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/animals/1" }
+        },
+        {
+          "name": "Удаление: в вольере есть животные",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/enclosures/3" }
+        }
+      ]
+    }
+  ]
+}

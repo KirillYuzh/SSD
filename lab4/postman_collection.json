@@ -1,0 +1,795 @@
+{
+  "info": {
+    "name": "Приют: задание 4",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "csrfToken", "value": "" },
+    { "key": "newUserId", "value": "" },
+    { "key": "animalId", "value": "" },
+    { "key": "applicationId", "value": "" },
+    { "key": "recordId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. CSRF и аутентификация",
+      "item": [
+        {
+          "name": "Получить CSRF-токен",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": "{{baseUrl}}/api/auth/csrf"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"csrfToken\", pm.response.json().token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Запрос без аутентификации",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "url": "{{baseUrl}}/api/animals"
+          }
+        },
+        {
+          "name": "Чтение заявителем",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "petrov" },
+                { "key": "password", "value": "Petrov12345" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/animals"
+          }
+        },
+        {
+          "name": "Заблокированная учётная запись",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "kozlova" },
+                { "key": "password", "value": "Kozlova12345" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/animals"
+          }
+        },
+        {
+          "name": "Неверный пароль",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "petrov" },
+                { "key": "password", "value": "wrong" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/animals"
+          }
+        },
+        {
+          "name": "Регистрация",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"orlov\", \"fullName\": \"Павел Орлов\", \"email\": \"orlov@example.com\", \"password\": \"Orlov12345!\", \"role\": \"STAFF\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/auth/register"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"newUserId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Повторная регистрация",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"orlov\", \"fullName\": \"Павел Орлов\", \"email\": \"other@example.com\", \"password\": \"Orlov12345!\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/auth/register"
+          }
+        },
+        {
+          "name": "Слабый пароль",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"weak\", \"fullName\": \"Слабый Пароль\", \"email\": \"weak@example.com\", \"password\": \"short1\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/auth/register"
+          }
+        },
+        {
+          "name": "Текущая учётная запись",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "orlov" },
+                { "key": "password", "value": "Orlov12345!" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Пользователи",
+      "item": [
+        {
+          "name": "Список пользователей",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/users"
+          }
+        },
+        {
+          "name": "Свой профиль",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "petrov" },
+                { "key": "password", "value": "Petrov12345" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/users/1"
+          }
+        },
+        {
+          "name": "Чужой профиль",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "petrov" },
+                { "key": "password", "value": "Petrov12345" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/users/2"
+          }
+        },
+        {
+          "name": "Изменение своего профиля",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "orlov" },
+                { "key": "password", "value": "Orlov12345!" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"pavel.orlov@example.com\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/users/{{newUserId}}"
+          }
+        },
+        {
+          "name": "Создание пользователя заявителем",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "petrov" },
+                { "key": "password", "value": "Petrov12345" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"tester\", \"fullName\": \"Тест Тестов\", \"email\": \"tester@example.com\", \"password\": \"Tester12345\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/users"
+          }
+        },
+        {
+          "name": "Смена состояния заявителем",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "sidorova" },
+                { "key": "password", "value": "Sidorova12345" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"BLOCKED\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/users/2/state"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Животные и вольеры",
+      "item": [
+        {
+          "name": "Создание животного сотрудником",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Рыжик\", \"species\": \"Кошка\", \"age\": 2}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animals"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"animalId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Создание животного заявителем",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "petrov" },
+                { "key": "password", "value": "Petrov12345" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Тайсон\", \"species\": \"Собака\", \"age\": 4}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animals"
+          }
+        },
+        {
+          "name": "Создание без CSRF-токена",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Тайсон\", \"species\": \"Собака\", \"age\": 4}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animals"
+          }
+        },
+        {
+          "name": "Изменение животного",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"age\": 3}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animals/{{animalId}}"
+          }
+        },
+        {
+          "name": "Размещение: вид не подходит вольеру",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"enclosureId\": 2}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animals/3/placement"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Заявки и бизнес-операции",
+      "item": [
+        {
+          "name": "Подача заявки",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "petrov" },
+                { "key": "password", "value": "Petrov12345" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"animalId\": {{animalId}}, \"motivation\": \"Готов забрать кошку домой\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/adoption-applications"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"applicationId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Чужая заявка",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "sidorova" },
+                { "key": "password", "value": "Sidorova12345" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/adoption-applications/{{applicationId}}"
+          }
+        },
+        {
+          "name": "Правка чужой заявки",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "sidorova" },
+                { "key": "password", "value": "Sidorova12345" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"motivation\": \"Другая мотивация\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/adoption-applications/{{applicationId}}"
+          }
+        },
+        {
+          "name": "Правка своей заявки",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "petrov" },
+                { "key": "password", "value": "Petrov12345" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"motivation\": \"Готов забрать кошку домой, есть переноска\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/adoption-applications/{{applicationId}}"
+          }
+        },
+        {
+          "name": "Отзыв чужой заявки",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "sidorova" },
+                { "key": "password", "value": "Sidorova12345" }
+              ]
+            },
+            "header": [{ "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }],
+            "url": "{{baseUrl}}/api/adoption-applications/{{applicationId}}/withdrawal"
+          }
+        },
+        {
+          "name": "Одобрение заявителем",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "petrov" },
+                { "key": "password", "value": "Petrov12345" }
+              ]
+            },
+            "header": [{ "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }],
+            "url": "{{baseUrl}}/api/adoption-applications/{{applicationId}}/approval"
+          }
+        },
+        {
+          "name": "Одобрение сотрудником",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [{ "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }],
+            "url": "{{baseUrl}}/api/adoption-applications/{{applicationId}}/approval"
+          }
+        },
+        {
+          "name": "Подготовка акта",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"applicationId\": {{applicationId}}}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animal-handover-records"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"recordId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Удаление подготовленного акта",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [{ "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }],
+            "url": "{{baseUrl}}/api/animal-handover-records/{{recordId}}"
+          }
+        },
+        {
+          "name": "Подтверждение передачи",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"CONFIRMED\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/animal-handover-records/1"
+          }
+        },
+        {
+          "name": "Возврат животного",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [{ "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }],
+            "url": "{{baseUrl}}/api/animal-handover-records/1/return"
+          }
+        },
+        {
+          "name": "Блокировка учётной записи",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"BLOCKED\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/users/2/state"
+          }
+        },
+        {
+          "name": "Заблокированный пользователь",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "sidorova" },
+                { "key": "password", "value": "Sidorova12345" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/animals"
+          }
+        },
+        {
+          "name": "Разблокировка учётной записи",
+          "request": {
+            "method": "PATCH",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"ACTIVE\"}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/users/2/state"
+          }
+        },
+        {
+          "name": "Разблокированный пользователь",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "sidorova" },
+                { "key": "password", "value": "Sidorova12345" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/animals"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Удаление созданных данных",
+      "item": [
+        {
+          "name": "Удалить заявку",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [{ "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }],
+            "url": "{{baseUrl}}/api/adoption-applications/{{applicationId}}"
+          }
+        },
+        {
+          "name": "Удалить животное",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [{ "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }],
+            "url": "{{baseUrl}}/api/animals/{{animalId}}"
+          }
+        },
+        {
+          "name": "Удалить пользователя",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [{ "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }],
+            "url": "{{baseUrl}}/api/users/{{newUserId}}"
+          }
+        },
+        {
+          "name": "Удаление: у животного есть заявки",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [{ "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }],
+            "url": "{{baseUrl}}/api/animals/1"
+          }
+        },
+        {
+          "name": "Удаление: в вольере есть животные",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                { "key": "username", "value": "staff" },
+                { "key": "password", "value": "Staff12345" }
+              ]
+            },
+            "header": [{ "key": "X-XSRF-TOKEN", "value": "{{csrfToken}}" }],
+            "url": "{{baseUrl}}/api/enclosures/3"
+          }
+        }
+      ]
+    }
+  ]
+}
